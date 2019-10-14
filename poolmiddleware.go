@@ -69,7 +69,8 @@ func NewMiddleware(key interface{}, factoryMethod func() interface{}) func(h htt
 	}
 }
 
-// Get retrieves a new object from the
+// Get retrieves a new object, by internally retrieving a pooler holder from the context
+// by its key, and getting an object from that holders pool.
 func Get(ctx context.Context, key interface{}) interface{} {
 	poolMiddleware, ok := ctx.Value(key).(*poolHolder)
 	if !ok {
