@@ -21,6 +21,14 @@ go get github.com/kernle32dll/pooler-go
 
 Detailed documentation can be found on [GoDoc](https://godoc.org/github.com/kernle32dll/pooler-go).
 
+## Why
+
+Pooling objects in http requests is hard.
+
+The main issue to fight here is the question, when an object can be returned to the pool. It is tempting to just `defer`, but that might be be to early. Consider a middleware, which fetches data via an arbitrary user-provided method (e.g. a function, or something service-like). Said method should create and fill the object. But that method is not able to properly judge when the request has ended, and a `defer` call there would return the object to the pool too soon. On the other hand, the middleware has no idea of the pooling, and is not able to help either. One might consider moving the pooling to the middleware then. But this just moves the problem up a layer, and makes writing type agnostic middlewares much harder.
+
+Thus, pooler-go was born. pooler-go, used as an middleware, provides an object pool which can be accessed anytime in code wrapped by the middleware. Coming back to above example, this would allow the data providing method to retrieve objects from a pool without the need to put them back. When the middleware has finished, pooler-go takes care of the cleanup.
+
 ## Getting started
 
 pooler-go is straight-forward to use. Initialize the middleware via `pooler.NewMiddleware(...)`,
