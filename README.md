@@ -82,3 +82,8 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
+```
+
+## Compatibility
+
+pooler-go is automatically tested against Go 1.13.X, 1.14.X and 1.15.X.
